@@ -1,39 +1,16 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { getProperties, getProperty, createProperty, deleteProperty, updateProperty } from '../controllers/properties.js';
 
 const router = express.Router();
 
-let properties = [
-]
+router.get('/',getProperties );
 
-router.get('/', (req, res) => {
-    res.send(properties);
-});
+router.post('/',createProperty );
 
-router.post('/', (req, res) => {
-    const property = req.body;
+router.get('/:id',getProperty);
 
-    properties.push({...property, id: uuidv4()});
+router.delete('/:id',deleteProperty );
 
-    res.send(`property with name : ${property.title} added to the database`);
-});
-
-router.get('/:id',(req,res) => {
-    const { id } = req.params;
-
-    const foundProperty = properties.find((property) => property.id === id);
-
-    res.send(foundProperty);
-});
-
-router.delete('/:id', (req,res) => {
-    const { id } = req.params;
-
-    properties = properties.filter((property) => property.id !== id);
-
-    res.send(`Property with the id${id} deleted`);
-
-
-});
+router.patch('/:id',updateProperty )
 
 export default router;
