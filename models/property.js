@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Schema } from "mongoose";
+
 
 const propertySchema = new mongoose.Schema({
 
@@ -54,7 +54,7 @@ const propertySchema = new mongoose.Schema({
         required: true
     },
     amenities:{
-        type: Array,
+        type: [String],
         required: true
     },
     photos:{
@@ -69,4 +69,6 @@ const propertySchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('property', propertySchema);
+const property = mongoose.model ('property', propertySchema);
+
+export default property;

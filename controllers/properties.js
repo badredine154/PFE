@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { property } from '../models/property.js';
+import property from '../models/property.js';
 
 export const createProperty = (req, res) => {
     const property = req.body;
@@ -13,9 +13,10 @@ export const createProperty = (req, res) => {
 export const getProperties = async (req, res) => {
     try {
         const properties = await property.find();
-        res.json(properties);
-    } catch (err) {
-        res.send('Error' + err);
+
+        res.status(200).json(properties);
+    } catch (error) {
+        res.status(404).json({message: error.message});
     }
 }
 
