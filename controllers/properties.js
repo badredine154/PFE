@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import property from '../models/property.js';
 
 export const createProperty = (req, res) => {
-    const property = req.body;
+    const property = new propertyModel (req.body);
 
     properties.push({ ...property, id: uuidv4() });
 

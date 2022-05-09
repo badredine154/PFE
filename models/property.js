@@ -33,10 +33,8 @@ const propertySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    agency:{
-        type: String,
-        required: true
-    },
+    agency: { type: String },
+
     description:{
         type: String,
         required: true
@@ -45,18 +43,9 @@ const propertySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    rentFrequency:{
-        type: Number,
-        required: true
-    },
-    furnishingStatus:{
-        type: Boolean,
-        required: true
-    },
-    amenities:{
-        type: [String],
-        required: true
-    },
+    rentFrequency: { type: Number },
+    furnishingStatus: { type: Boolean },
+    amenities: { type: [String] },
     photos:{
         type: String,
         required: true
