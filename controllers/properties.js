@@ -2,12 +2,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 import property from '../models/property.js';
 
-export const createProperty = (req, res) => {
-    const property = new propertyModel (req.body);
+export const createProperty = async (req, res) => {
+    const Property = req.body;
 
-    properties.push({ ...property, id: uuidv4() });
+    const newProperty = new property(Property);
 
-    res.send(`property with name : ${property.title} added to the database`);
+    try {
+        await newProperty.save();
+
+        res.status(201).json(newProperty);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
 }
 
 export const getProperties = async (req, res) => {
@@ -16,7 +22,7 @@ export const getProperties = async (req, res) => {
 
         res.status(200).json(properties);
     } catch (error) {
-        res.status(404).json({message: error.message});
+        res.status(404).json({ message: error.message });
     }
 }
 
