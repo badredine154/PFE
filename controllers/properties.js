@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
 
 import property from '../models/property.js';
 
@@ -26,33 +26,34 @@ export const getProperties = async (req, res) => {
     }
 }
 
-export const getProperty = (req, res) => {
+export const getProperty = async (req, res) => {
     const { id } = req.params;
-
-    const foundProperty = properties.find((property) => property.id === id);
-
-    res.send(foundProperty);
+    try{
+    const Property = await property.findById(id);
+    
+    res.json(Property);
+    } catch(error) {
+        res.json({message: error});
+    }
 }
 
-export const deleteProperty = (req, res) => {
+export const deleteProperty = async (req, res) => {
     const { id } = req.params;
 
-    properties = properties.filter((property) => property.id !== id);
+    if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send('No property with that id');
 
-    res.send(`Property with the id${id} deleted`);
+    await property.findByIdAndRemove(id);
+
+    res.json({ message: 'Property deleted successfully' });
 }
 
-export const updateProperty = (req, res) => {
-    const { id } = req.params;
-    const { title, location, Price, type, yearOfConstruction } = req.body;
+export const updateProperty = async (req, res) => {
+    const { id: _id } = req.params;
+    const Property = req.body;
 
-    const property = properties.find((property) => property.id === id);
+    if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No property with that id');
 
-    if (title) property.title = title;
-    if (location) property.location = location;
-    if (Price) property.Price = Price;
-    if (type) property.type = type;
-    if (yearOfConstruction) property.yearOfConstruction = yearOfConstruction;
+    const updatedProperty = await property.findByIdAndUpdate(_id, { ...Property, _id }, { new: true });
 
-    res.send(`user with the id${id} has been updated`);
+    res.json(updatedProperty);
 }
