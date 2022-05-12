@@ -47,9 +47,12 @@ const propertySchema = new mongoose.Schema({
     furnishingStatus: { type: Boolean },
     amenities: { type: [String] },
     photos:{
+        path: String,
         type: String,
-        required: true
-    },
+        size: Number,
+        folder: String,
+        filename: String
+      },
     status:{
         type:String,
         enum:["available","sold"],

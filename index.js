@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import propertiesRoutes from './routes/properties.js';
 import mongoose from 'mongoose';
-
+import uploadFeature from '@admin-bro/upload';
 import mongooseAdminBro from '@admin-bro/mongoose';
 import formidableMiddleware from 'express-formidable';
 import AdminBro from 'admin-bro';
@@ -31,38 +31,26 @@ app.get('/', (req, res) => {
 // Pass all configuration settings to AdminBro
 const adminBro = new AdminBro({
     resources: [{
-        resource: property
-    },
-    {
-      resource: User,
+      resource: property,
       options: {
-        properties: {
-          encryptedPassword: { isVisible: false },
-          password: {
-            type: 'string',
-            isVisible: {
-              list: false, edit: true, filter: false, show: false,
-            },
-          },
-        },
-        /*actions: {
-          new: {
-            before: async (request) => {
-              if(request.payload.record.password) {
-                request.payload.record = {
-                  ...request.payload.record,
-                  encryptedPassword: await bcrypt.hash(request.payload.record.password, 10),
-                  password: undefined,
-                }
-              }
-              return request
-            },
-          },
-        }*/
-      }
+      },
+      features: [
+        uploadFeature({
+          provider: { local: { bucket: 'uploads'}},
+          properties: {
+            key: 'photos.path',
+            bucket: 'photos.folder',
+            mimeType: 'photos.type',
+            size: 'photos.size',
+            filename: 'photos.filename',
+            file: 'uploadFile',
+          }
+        })
+      ]
     }],
     rootPath: '/admin',
   })
+    
 
   // Build and use a router which will handle all AdminBro routes
   const router = AdminBroExpressjs.buildAuthenticatedRouter(adminBro, {
